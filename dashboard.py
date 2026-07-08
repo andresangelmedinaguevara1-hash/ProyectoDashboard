@@ -52,27 +52,26 @@ try:
     df_procesos.loc[df_procesos['Nombre_Limpio'].str.upper() == 'TRANSPORTE I', 'Tiempo total'] = '20d'
     df_procesos.loc[df_procesos['Nombre_Limpio'].str.upper() == 'TRANSPORTE I', 'Tiempo mínimo'] = '1d 6h'
     df_procesos.loc[df_procesos['Nombre_Limpio'].str.upper() == 'TRANSPORTE I', 'Tiempo máximo'] = '1d 6h'
-    
-    # Filtrar solo actividades reales (antes tipo Tarea)
-    df_actividades = df_procesos[df_procesos['Tipo_Limpio'] == 'Actividad'].copy()
-    df_actividades['Minutos Promedio'] = df_actividades['Tiempo promedio'].apply(texto_a_minutos)
-    df_actividades['Actividad'] = df_actividades['Nombre_Limpio'].str.upper()
-
-    # Extraer metricas del resumen
+# Extraer metricas del resumen
     t_asis = df_resumen.loc[df_resumen['Métrica'] == 'Tiempo Total AS-IS', 'Valor'].values[0]
     t_tobe = df_resumen.loc[df_resumen['Métrica'] == 'Tiempo Total TO-BE', 'Valor'].values[0]
     ahorro = df_resumen.loc[df_resumen['Métrica'] == 'Variación (Resta)', 'Valor'].values[0]
+    pct_mejora = float(df_resumen.loc[df_resumen['Métrica'] == 'Porcentaje de Mejora', 'Valor'].values[0]) * 100
+    
     # =========================================================
     # KPI PRINCIPAL: PORCENTAJE DE MEJORA (FIJO ARRIBA)
     # =========================================================
     st.markdown("### Resumen Ejecutivo de Rendimiento")
     col_kpi1, col_kpi2, col_kpi3 = st.columns([1, 1, 2])
     with col_kpi1:
-        # Usamos .replace() para corregir el texto del Excel en vivo
-        texto_asis_corregido = str(t_asis).replace("meses", "minutos")
+        # Esto quita la palabra "meses" o "m" confusa y la deja limpia
+        texto_asis_corregido = str(t_asis).replace("meses", "minutos").replace("28m", "28 minutos")
         st.metric(label="Tiempo Total Inicial (AS-IS)", value=texto_asis_corregido)
     with col_kpi2:
-        # Hacemos lo mismo para el escenario TO-BE si también lo necesita
+        texto_tobe_corregido = str(t_tobe).replace("meses", "minutos")
+        st.metric(label="Tiempo Total Final (TO-BE)", value=texto_tobe_corregido)
+    with col_kpi3:
+        st.metric(label="Porcentaje de Eficiencia / Mejora Global", value=f"{pct_mejora:.2f}%", delta=ahorro)
         texto_tobe_corregido = str(t_tobe).replace("meses", "minutos")
         st.metric(label="Tiempo Total Final (TO-BE)", value=texto_tobe_corregido)
     with col_kpi3:
