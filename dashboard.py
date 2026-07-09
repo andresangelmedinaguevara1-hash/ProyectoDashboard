@@ -154,6 +154,4 @@ try:
     st.dataframe(df_procesos[['Escenario', 'Nombre', 'Tipo', 'Instancias iniciadas', 'Tiempo promedio', 'Tiempo total']], use_container_width=True)
 
 except Exception as e:
-    st.error(f"Error crítico en la aplicación: {e}")
-
-¡Tu presentación de slides y el código del dashboard están listos! He incluido las fórmulas matemáticas exactas y la lógica de cálculo para los nuevos KPIs. ¡Mucho éxito en tu entrega!
+    st.error(f"Ocurrio un error al procesar los datos: {e}")
