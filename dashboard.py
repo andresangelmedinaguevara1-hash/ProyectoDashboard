@@ -68,7 +68,7 @@ try:
         st.metric(label="Porcentaje de Eficiencia / Mejora Global", value=f"{pct_mejora:.2f}%", delta=ahorro)
 
     # =========================================================
-    # NUEVA SECCIÓN: KPIs DE SEGUIMIENTO OPERATIVO (SOLICITADOS)
+    # SECCIÓN: KPIs DE SEGUIMIENTO OPERATIVO
     # =========================================================
     st.markdown("---")
     st.header("🎯 KPIs de Seguimiento Operativo")
@@ -85,36 +85,41 @@ try:
     uph_val = 60 / ct_val if ct_val > 0 else 0
     
     # 3. First Time Through (FTT)
-    ftt_val = (total_completadas_asis / total_instancias_asis * 100) if total_instancias_asis > 0 else 0
+    ftt_val = (total_completadas_asis / total_instancias_asis) if total_instancias_asis > 0 else 0
 
     c1, c2, c3 = st.columns(3)
     with c1:
         st.subheader("Cycle Time (CT)")
+        st.markdown("*Mide el tiempo promedio requerido para completar una unidad desde el inicio hasta el final de una etapa.*")
         st.latex(r"CT = \frac{\sum t_i}{n}")
         st.metric("Resultado (Minutos/Unidad)", f"{ct_val:.2f} min")
-        st.caption("Rapidez con la que se ejecuta una actividad.")
 
     with c2:
         st.subheader("Throughput (UPH)")
+        st.markdown("*Representa el número total de unidades procesadas por hora, midiendo la capacidad productiva total.*")
         st.latex(r"UPH = \frac{3600}{CT}")
         st.metric("Resultado (Unidades/Hora)", f"{uph_val:.2f} UPH")
-        st.caption("Capacidad productiva del sistema por hora.")
 
     with c3:
         st.subheader("First Time Through (FTT)")
-        st.latex(r"FTT = \frac{Good Units}{Total Units} \times 100")
-        st.metric("Calidad a la Primera", f"{ftt_val:.1f}%")
-        st.caption("Porcentaje de éxito sin reprocesos.")
+        st.markdown("*Evalúa la calidad del proceso mostrando la proporción de unidades completadas correctamente en el primer intento.*")
+        st.latex(r"FTT = \frac{\text{Good Units}}{\text{Total Units}}")
+        st.metric("Resultado (Índice de Calidad)", f"{ftt_val:.2f}")
 
-    # Disponibilidad y Rendimiento (OEE Components)
-    st.markdown("#### Disponibilidad (A) y Performance (P)")
+    # Sección de Disponibilidad y Rendimiento (OEE sin porcentajes)
+    st.markdown("---")
+    st.subheader("📊 Disponibilidad (A) y Performance (P)")
+    
     cc1, cc2 = st.columns(2)
     with cc1:
-        st.latex(r"Availability(A) = \frac{Operating Time}{Total Time} \times 100\%")
-        st.progress(0.92, text="92% de Disponibilidad Estimada")
+        st.markdown("**Disponibilidad (A):** *Mide la proporción del tiempo en que el sistema permanece disponible para operar respecto al tiempo planificado.*")
+        st.latex(r"Availability(A) = \frac{\text{Operating Time}}{\text{Total Time}}")
+        st.metric("Resultado (Ratio de Disponibilidad)", "0.92")
+        
     with cc2:
-        st.latex(r"Performance(P) = \frac{Ideal Time}{Real Time} \times 100\%")
-        st.progress(0.88, text="88% de Rendimiento de Velocidad")
+        st.markdown("**Performance (P):** *Evalúa la eficiencia de velocidad del proceso comparando el tiempo ideal frente al tiempo real de ejecución.*")
+        st.latex(r"Performance(P) = \frac{\text{Ideal Time}}{\text{Real Time}}")
+        st.metric("Resultado (Ratio de Rendimiento)", "0.88")
 
     # =========================================================
     # GRÁFICOS INTERACTIVOS
